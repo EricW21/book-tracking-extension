@@ -1,0 +1,28 @@
+{
+    "manifest_version": 3,
+    "name": "Reading Progress Tracker",
+    "version": "1.0",
+    "description": "A Chrome extension to track and record reading progress on specific websites.",
+    "permissions": [
+      "storage",
+      "activeTab",
+      "tabs"
+   
+    ],
+    "background": {
+      "service_worker": "background.js"
+    },
+    "content_scripts": [
+      {
+        "matches": ["<all_urls>"], 
+        "js": ["script.js"]
+      }
+    ],
+    "host_permissions": [
+      "http://localhost:3000/",
+      "http://localhost:5000/"
+    ],
+    "action": {
+        "default_popup": "index.html"
+    }
+  }
