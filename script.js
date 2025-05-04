@@ -1,3 +1,5 @@
+
+
 async function test() {
     chrome.storage.local.get(["link"]).then((result) => {
         console.log("Value is " + result.key);

@@ -20,8 +20,9 @@ async function getCurrentTab() {
                   });
             }
             else {
-                if (link.length>20) {
-                    link = []
+                if (link.length>15) {
+                    link.shift();
+                    
                 }
                 link.push(value);
                 
