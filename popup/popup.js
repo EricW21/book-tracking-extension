@@ -12,3 +12,6 @@ document.addEventListener('DOMContentLoaded', function() {
     test();
 });
 
+document.getElementById("website-button").addEventListener("click", function () {
+    window.open("../website.html", "_blank");
+})
