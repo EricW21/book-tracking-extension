@@ -1,4 +1,10 @@
 
+let trackedWebsites = [];
+
+chrome.storage.local.get(["trackedWebsites"]).then((result) => {
+    trackedWebsites = result.trackedWebsites || [];
+});
+
 async function getCurrentTab() {
     let queryOptions = { active: true, lastFocusedWindow: true };
     // `tab` will either be a `tabs.Tab` instance or `undefined`.
@@ -6,32 +12,15 @@ async function getCurrentTab() {
     let [tab] = await chrome.tabs.query(queryOptions);
     
     if (tab) {
-        
         let value=tab.url;
-        console.log(JSON.stringify(tab))
+        
+        
         if (!value) {
             value='error occured:'+JSON.stringify(tab)
         }
-        chrome.storage.local.get(["link"]).then((result) => {
-            link = result.link
-            if (!link || !Array.isArray(link)) {
-                chrome.storage.local.set({ 'link': [value] }).then(() => {
-                    console.log("Value is set");
-                  });
-            }
-            else {
-                if (link.length>15) {
-                    link.shift();
-                    
-                }
-                link.push(value);
-                
-                chrome.storage.local.set({ 'link': link  }).then(() => {
-                    console.log("Value is set");
-                  });
-            }
-            
-        });
+        logUrl(value);
+        website = extractWebsite(value);
+        
         
     }
     else {
@@ -39,6 +28,47 @@ async function getCurrentTab() {
     }
     
     return;
+}
+
+function logUrl(url) {
+    // add a link to recent links (testing purposes), capped at 15
+
+    value = extractWebsite(url);
+    chrome.storage.local.get(["link"]).then((result) => {
+        link = result.link
+        if (!link || !Array.isArray(link)) {
+            chrome.storage.local.set({ 'link': [value] }).then(() => {
+                console.log("Value is set");
+                });
+        }
+        else {
+            if (link.length>15) {
+                link.shift();
+                
+            }
+            link.push(value,url);
+            
+            chrome.storage.local.set({ 'link': link  }).then(() => {
+                console.log("Value is set");
+            });
+        }
+        
+    });
+}
+function extractWebsite(url) {
+    try {
+        const hostname = new URL(url).hostname;
+
+        const parts = hostname.split('.');
+        if (parts.length >= 2) {
+        return parts.slice(-2).join('.'); 
+        }
+
+        return hostname; 
+    } catch (e) {
+        console.error("Not an URL", url);
+        return null;
+    }
 }
 chrome.tabs.onUpdated.addListener(async function(tabId, changeInfo, tab) {
     if (changeInfo.url) {
