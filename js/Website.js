@@ -2,15 +2,15 @@
 
 class Website {
     website = "";
-    name = "";
+    
     novels = [];
-    constructor(website,name) {
+    constructor(website) {
         this.website=website;
-        this.name=name;
+        
     }
-    constructor(website,name,novels) {
+    constructor(website,novels) {
         this.website=website;
-        this.name=name;
+       
         this.novels = novels;
     }
 }
