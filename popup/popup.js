@@ -2,8 +2,8 @@
 
 async function test() {
     chrome.storage.local.get(["link"]).then((result) => {
-        console.log("Value is " + result.key);
-        document.getElementById('title-container').innerHTML=JSON.stringify(result);
+        const linkArray = result.link || [];
+        document.getElementById('title-container').innerHTML=linkArray.map(item => `<div>${item}</div>`).join('');
     });
     
 }

@@ -3,6 +3,8 @@ let trackedWebsites = [];
 
 chrome.storage.local.get(["trackedWebsites"]).then((result) => {
     trackedWebsites = result.trackedWebsites || [];
+    start = ["novelupdates.com","wuxiaworld.com","royalroad.com"];
+    trackedWebsites = trackedWebsites.concat(start);
 });
 
 async function getCurrentTab() {
@@ -12,14 +14,26 @@ async function getCurrentTab() {
     let [tab] = await chrome.tabs.query(queryOptions);
     
     if (tab) {
-        let value=tab.url;
+        let url=tab.url;
+        
+        console.log("original url: " + url);
         
         
-        if (!value) {
-            value='error occured:'+JSON.stringify(tab)
+        website = extractWebsite(url);
+        if (website=="") {
+            console.log("not a website");
+            return;
         }
-        logUrl(value);
-        website = extractWebsite(value);
+        if (!checkWebsite(website)) {
+            console.log("not a tracked website");
+            return;
+        }
+        addWebsite(website);
+        console.log("logged");
+        logUrl(url);
+
+        /// here should be good to put functionality to record novels as part of websites
+        
         
         
     }
@@ -33,25 +47,23 @@ async function getCurrentTab() {
 function logUrl(url) {
     // add a link to recent links (testing purposes), capped at 15
 
-    value = extractWebsite(url);
+    
     chrome.storage.local.get(["link"]).then((result) => {
-        link = result.link
-        if (!link || !Array.isArray(link)) {
-            chrome.storage.local.set({ 'link': [value] }).then(() => {
-                console.log("Value is set");
-                });
-        }
-        else {
-            if (link.length>15) {
-                link.shift();
-                
-            }
-            link.push(value,url);
+        let link = result.link || [];
+        console.log(link.length);
+
+        
+        if (link.length>15) {
+            link.shift();
             
-            chrome.storage.local.set({ 'link': link  }).then(() => {
-                console.log("Value is set");
-            });
         }
+        link.push(url);
+        console.log(link);
+        console.log(link.length);
+        chrome.storage.local.set({ "link": link  }).then(() => {
+            console.log("Value is set");
+        });
+        
         
     });
 }
@@ -69,6 +81,13 @@ function extractWebsite(url) {
         console.error("Not an URL", url);
         return null;
     }
+}
+function addWebsite(site) {
+    chrome.storage.local.set({ site: []  })
+}
+function checkWebsite(site) {
+    // make it so that it checks if website is tracked correctly
+    return true;
 }
 chrome.tabs.onUpdated.addListener(async function(tabId, changeInfo, tab) {
     if (changeInfo.url) {
