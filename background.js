@@ -5,6 +5,9 @@ chrome.storage.local.get(["trackedWebsites"]).then((result) => {
     trackedWebsites = result.trackedWebsites || [];
     start = ["novelupdates.com","wuxiaworld.com","royalroad.com"];
     trackedWebsites = trackedWebsites.concat(start);
+    for (i=0;i<trackedWebsites.length;i++) {
+        addWebsite(trackedWebsites[i]);
+    }
 });
 
 async function getCurrentTab() {
@@ -82,12 +85,33 @@ function extractWebsite(url) {
         return null;
     }
 }
-function addWebsite(site) {
-    chrome.storage.local.set({ site: []  })
+async function addWebsite(site) {
+    tracked = true;
+    await chrome.storage.local.get([site]).then((result) => {
+        console.log("result[site]: "+result[site]);
+        if (result[site]==undefined) {
+            tracked=false;
+        }
+        
+    })
+    if (tracked) {
+        chrome.storage.local.set({ [site]: []  });
+    }
+    
 }
-function checkWebsite(site) {
-    // make it so that it checks if website is tracked correctly
-    return true;
+async function checkWebsite(site) {
+    tracked = true;
+    await chrome.storage.local.get(null).then((allData) => {
+        console.log(allData); // See all keys and values
+    });
+    await chrome.storage.local.get([site]).then((result) => {
+        console.log("result[site]: "+result[site]);
+        if (result[site]==undefined) {
+            tracked=false;
+        }
+        
+    })
+    return tracked;
 }
 chrome.tabs.onUpdated.addListener(async function(tabId, changeInfo, tab) {
     if (changeInfo.url) {
