@@ -1,14 +1,18 @@
 
 let trackedWebsites = [];
 
-chrome.storage.local.get(["trackedWebsites"]).then((result) => {
-    trackedWebsites = result.trackedWebsites || [];
-    start = ["novelupdates.com","wuxiaworld.com","royalroad.com"];
-    trackedWebsites = trackedWebsites.concat(start);
-    for (i=0;i<trackedWebsites.length;i++) {
-        addWebsite(trackedWebsites[i]);
+initializeTrackedWebsites();
+async function initializeTrackedWebsites() {
+    try {
+        const result = await chrome.storage.local.get(["trackedWebsites"]);
+        let trackedWebsites = result.trackedWebsites || [];
+        const start = ["novelupdates.com", "wuxiaworld.com", "royalroad.com"];
+        trackedWebsites = trackedWebsites.concat(start);
+        start.forEach(addWebsite);
+    } catch (error) {
+        console.error("Error retrieving tracked websites:", error);
     }
-});
+}
 
 async function getCurrentTab() {
     let queryOptions = { active: true, lastFocusedWindow: true };
@@ -94,7 +98,7 @@ async function addWebsite(site) {
         }
         
     })
-    if (tracked) {
+    if (!tracked) {
         chrome.storage.local.set({ [site]: []  });
     }
     
