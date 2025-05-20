@@ -1,14 +1,17 @@
 
-let trackedWebsites = [];
+let trackedWebsites = new Set();
 
 initializeTrackedWebsites();
 async function initializeTrackedWebsites() {
+    console.log("initializing");
     try {
         const result = await chrome.storage.local.get(["trackedWebsites"]);
-        let trackedWebsites = result.trackedWebsites || [];
+        trackedWebsites = new Set(result.trackedWebsites || []);
         const start = ["novelupdates.com", "wuxiaworld.com", "royalroad.com"];
-        trackedWebsites = trackedWebsites.concat(start);
         start.forEach(addWebsite);
+        start.forEach(site => trackedWebsites.add(site));
+        
+        
     } catch (error) {
         console.error("Error retrieving tracked websites:", error);
     }
@@ -26,17 +29,17 @@ async function getCurrentTab() {
         console.log("original url: " + url);
         
         
-        website = extractWebsite(url);
+        let website = extractWebsite(url);
         if (website=="") {
             console.log("not a website");
             return;
         }
-        if (!checkWebsite(website)) {
+        if (! await isTrackedWebsite(website)) {
             console.log("not a tracked website");
             return;
         }
-        addWebsite(website);
-        console.log("logged");
+        await addWebsite(website);
+        
         logUrl(url);
 
         /// here should be good to put functionality to record novels as part of websites
@@ -80,7 +83,7 @@ function extractWebsite(url) {
 
         const parts = hostname.split('.');
         if (parts.length >= 2) {
-        return parts.slice(-2).join('.'); 
+            return parts.slice(-2).join('.'); 
         }
 
         return hostname; 
@@ -90,32 +93,18 @@ function extractWebsite(url) {
     }
 }
 async function addWebsite(site) {
-    tracked = true;
-    await chrome.storage.local.get([site]).then((result) => {
-        console.log("result[site]: "+result[site]);
-        if (result[site]==undefined) {
-            tracked=false;
-        }
-        
-    })
-    if (!tracked) {
-        chrome.storage.local.set({ [site]: []  });
+    
+    if (isTrackedWebsite(site)) {
+        return;
     }
     
+    chrome.storage.local.set({ [site]: []  });
+    
+    
 }
-async function checkWebsite(site) {
-    tracked = true;
-    await chrome.storage.local.get(null).then((allData) => {
-        console.log(allData); // See all keys and values
-    });
-    await chrome.storage.local.get([site]).then((result) => {
-        console.log("result[site]: "+result[site]);
-        if (result[site]==undefined) {
-            tracked=false;
-        }
-        
-    })
-    return tracked;
+function isTrackedWebsite(site) {
+    
+    return trackedWebsites.has(site);
 }
 chrome.tabs.onUpdated.addListener(async function(tabId, changeInfo, tab) {
     if (changeInfo.url) {
