@@ -1,8 +1,8 @@
 
 
 class BaseParser {
-    novel = 0;
-    chapter = 1;
+    novel = 1;
+    chapter = 2;
     constructor(url,novel,chapter) {
         this.url = url;
 

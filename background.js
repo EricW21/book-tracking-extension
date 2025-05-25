@@ -14,7 +14,7 @@ async function initializeTrackedWebsites() {
         trackedWebsites = new Set(result.trackedWebsites || []);
 
         /** @type {string[]} */
-        const start = ["novelupdates.com", "wuxiaworld.com", "royalroad.com","comick.io"];
+        const start = ["novelupdates.com", "wuxiaworld.com", "royalroad.com","comick.io", "katreadingcafe.com", "mangadex.org"];
         start.forEach(addWebsite);
         start.forEach(site => trackedWebsites.add(site));
     } catch (error) {
