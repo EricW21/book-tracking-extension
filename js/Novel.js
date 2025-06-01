@@ -2,12 +2,29 @@
 class Novel {
     
     name = "";
-    mainUrl = "";
-    mostRecentChapterUrl = "";
-    constructor(name, mainUrl, mostRecentChapterUrl) {
+    lastChapter = "";
+    lastChapter2 = "";
+    constructor(name,  lastChapter) {
         
         this.name = name;
-        this.mainUrl = mainUrl;
-        this.mostRecentChapterUrl = mostRecentChapterUrl;
+        
+        this.lastChapter = lastChapter;
+    }
+    update(lastChapter) {
+        this.lastChapter2 = this.lastChapter;
+        this.lastChapter = lastChapter;
+    }
+    toJSON() {
+        return {
+        name: this.name,
+        lastChapter: this.lastChapter,
+        lastChapter2: this.lastChapter2
+        };
+    }
+
+    static fromJSON(obj) {
+        const novel = new Novel(obj.name, obj.lastChapter);
+        novel.lastChapter2 = obj.lastChapter2;
+        return novel;
     }
 }

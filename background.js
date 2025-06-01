@@ -4,6 +4,13 @@ let trackedWebsites = new Set();
 
 initializeTrackedWebsites();
 
+/** @type {string[]} */
+const keywords = ["novel", "transla", "manga"];
+
+let lastWebsite = new Website();
+
+/** @type {string[]} */
+        const start = ["novelupdates.com", "wuxiaworld.com", "royalroad.com","comick.io", "katreadingcafe.com", "mangadex.org"];
 /** 
  * @returns {Promise<void>}
  */
@@ -13,8 +20,7 @@ async function initializeTrackedWebsites() {
         const result = await chrome.storage.local.get(["trackedWebsites"]);
         trackedWebsites = new Set(result.trackedWebsites || []);
 
-        /** @type {string[]} */
-        const start = ["novelupdates.com", "wuxiaworld.com", "royalroad.com","comick.io", "katreadingcafe.com", "mangadex.org"];
+        
         start.forEach(addWebsite);
         start.forEach(site => trackedWebsites.add(site));
     } catch (error) {
@@ -49,19 +55,45 @@ async function getCurrentTab() {
         if (!isTrackedWebsite(website)) {
             console.log("not a tracked website");
 
-            /** @type {string[]} */
-            const keywords = ["novel", "transla"];
+            
             if (keywords.some(keyword => website.includes(keyword))) {
                 await addWebsite(website);
             }
             return;
         }
-        await addWebsite(website);
-        
+        console.log(" about to get updated");
+        await updateWebsite(website,url);
+        console.log("last website: " + lastWebsite.getDomain());
         logUrl(url);
     } else {
         console.log('no tab');
     }
+}
+
+async function SetRecentWebsite(site) {
+    if (lastWebsite.getDomain() !== site) {
+        const result = await chrome.storage.local.get([site]);
+        if (result[site]) {
+            lastWebsite = Website.fromJSON(result[site]);
+        } else {
+            lastWebsite = new Website(site);
+        }
+    }
+}
+
+// (website should be added before the updateWebsite function)
+async function updateWebsite(website,url) {
+    
+    await SetRecentWebsite(website);
+
+    console.log("last website should be " + website + " and is " + lastWebsite.getDomain());
+    this.tokens = new URL(url).pathname.split("/").filter(Boolean);
+    console.log("tokens: " + this.tokens);
+    lastWebsite.updateNovel(this.tokens);
+    console.log("last website after update: " , lastWebsite);
+    await chrome.storage.local.set({ [site]: lastWebsite.toJSON }).then(() => {
+        console.log("Website updated:", lastWebsite);
+    });
 }
 
 /**
@@ -110,8 +142,13 @@ async function addWebsite(site) {
     if (isTrackedWebsite(site)) {
         return;
     }
-    chrome.storage.local.set({ [site]: [] });
+    chrome.storage.local.set({ [site]: new Website(site).toJSON() });
     trackedWebsites.add(site);
+    SetRecentWebsite(site);
+    chrome.storage.local.get(null, function(items) {
+        
+        console.log(items);
+    });
 }
 
 /**

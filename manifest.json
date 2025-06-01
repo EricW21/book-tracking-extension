@@ -11,7 +11,7 @@
    
     ],
     "background": {
-      "scripts": ["background.js"]
+      "scripts": ["js/Novel.js","js/Website.js","background.js"]
       
     },
     "content_scripts": [
