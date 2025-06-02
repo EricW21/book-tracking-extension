@@ -53,11 +53,7 @@ class Website {
             }   
             if (!found) {
                 const newNovel = new Novel(tokens[this.novel], tokens[tokens.length - 1]);
-                this.novels.push(newNovel);
-                if (this.novels.length !== 1) {
-                    let len = this.novels.length;
-                    [this.novels[0], this.novels[len - 1]] = [this.novels[len - 1], this.novels[0]];
-                }
+                this.novels.unshift(newNovel);
             }
         }
     }

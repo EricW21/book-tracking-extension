@@ -91,7 +91,7 @@ async function updateWebsite(website,url) {
     console.log("tokens: " + this.tokens);
     lastWebsite.updateNovel(this.tokens);
     console.log("last website after update: " , lastWebsite);
-    await chrome.storage.local.set({ [site]: lastWebsite.toJSON }).then(() => {
+    await chrome.storage.local.set({ site: lastWebsite.toJSON() }).then(() => {
         console.log("Website updated:", lastWebsite);
     });
 }
@@ -100,6 +100,7 @@ async function updateWebsite(website,url) {
  * @param {string} url
  */
 function logUrl(url) {
+    console.log("Logging URL: " + url);
     chrome.storage.local.get(["link"]).then((result) => {
         /** @type {string[]} */
         let link = result.link || [];
