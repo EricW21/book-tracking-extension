@@ -13,5 +13,5 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 document.getElementById("website-button").addEventListener("click", function () {
-    window.open("../website.html", "_blank");
+    window.open("../react-website/dist/index.html", "_blank");
 })
