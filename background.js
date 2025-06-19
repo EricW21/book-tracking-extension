@@ -144,7 +144,9 @@ async function addWebsite(site) {
         return;
     }
     chrome.storage.local.set({ [site]: new Website(site).toJSON() });
+    
     trackedWebsites.add(site);
+    chrome.storage.local.set({ trackedWebsites: Array.from(trackedWebsites) });
     SetRecentWebsite(site);
     chrome.storage.local.get(null, function(items) {
         

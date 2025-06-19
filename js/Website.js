@@ -2,8 +2,8 @@
 
 class Website {
     domain = "";
-    novel = 0;
-    chapter = 0;
+    novel = 2;
+    chapter = 3;
     novels = [];
 
     // this is meant to store a generic novel object to account for edge cases
