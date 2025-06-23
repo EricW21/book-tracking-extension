@@ -1,9 +1,9 @@
 
 
-export class Website {
+class Website {
     domain = "";
-    novel = 2;
-    chapter = 3;
+    novel = 1;
+    chapter = 2;
     novels = [];
 
     // this is meant to store a generic novel object to account for edge cases

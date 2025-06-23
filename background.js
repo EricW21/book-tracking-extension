@@ -143,7 +143,10 @@ async function addWebsite(site) {
     if (isTrackedWebsite(site)) {
         return;
     }
-    chrome.storage.local.set({ [site]: new Website(site).toJSON() });
+    let website = new Website(site);
+    let novel = new Novel("test","chapter1");
+    website.novels.push(novel);
+    chrome.storage.local.set({ [site]:website.toJSON()  });
     
     trackedWebsites.add(site);
     chrome.storage.local.set({ trackedWebsites: Array.from(trackedWebsites) });
