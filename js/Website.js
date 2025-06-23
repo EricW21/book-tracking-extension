@@ -1,6 +1,6 @@
 
 
-class Website {
+export class Website {
     domain = "";
     novel = 2;
     chapter = 3;
@@ -110,3 +110,4 @@ class Website {
     
     
 }
+

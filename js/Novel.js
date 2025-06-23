@@ -1,5 +1,5 @@
 
-class Novel {
+export class Novel {
     
     name = "";
     lastChapter = "";

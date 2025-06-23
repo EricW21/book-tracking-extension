@@ -2,14 +2,24 @@ import { useEffect, useState } from 'react';
 
 import './App.css'
 
+
+/// <reference types="chrome" />
+
+import type { Novel } from '@js/Novel.js';
+import type { Website } from '@js/Website.js';
+
 function App() {
   const [websites, setWebsites] = useState<string[]>([]);
-  
+  const [websiteDict, setWebsiteDict] = useState<Map<string, Novel[]>>(new Map());
+
   useEffect(() => {
     chrome.storage.local.get(["trackedWebsites"]).then((result) => {
-      setWebsites(result.trackedWebsites || ["hello"]);
+      setWebsites(result.trackedWebsites || []);
       
     });
+    
+
+
   }, []);
   return (
     
