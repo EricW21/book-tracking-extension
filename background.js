@@ -91,8 +91,13 @@ async function updateWebsite(website,url) {
     console.log("tokens: " + this.tokens);
     lastWebsite.updateNovel(this.tokens);
     console.log("last website after update: " , lastWebsite);
-    await chrome.storage.local.set({ site: lastWebsite.toJSON() }).then(() => {
+    await chrome.storage.local.set({ [website]: lastWebsite.toJSON() }).then(() => {
         console.log("Website updated:", lastWebsite);
+    });
+
+    chrome.storage.local.get(null, function(items) {
+        
+        console.log(items);
     });
 }
 
@@ -114,6 +119,7 @@ function logUrl(url) {
         chrome.storage.local.set({ "link": link }).then(() => {
             console.log("Value is set");
         });
+        
     });
 }
 
@@ -143,10 +149,7 @@ async function addWebsite(site) {
     if (isTrackedWebsite(site)) {
         return;
     }
-    let website = new Website(site);
-    let novel = new Novel("test","chapter1");
-    website.novels.push(novel);
-    chrome.storage.local.set({ [site]:website.toJSON()  });
+    chrome.storage.local.set({ [site]: new Website(site).toJSON() });
     
     trackedWebsites.add(site);
     chrome.storage.local.set({ trackedWebsites: Array.from(trackedWebsites) });

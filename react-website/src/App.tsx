@@ -51,7 +51,10 @@ function App() {
                 <h2>{site}</h2>
                 
                 {websiteDict.get(site)?.novels.map((novel, index) => 
-                  <p key={index}>{novel.name}, Last Chapter: {novel.lastChapter}</p>)}
+                  <div key={index}>
+                    <h3>{novel.name}</h3>
+                    <p>Last Chapter: {novel.lastChapter}</p> 
+                  </div>)}
               </div>
               
             ))}
