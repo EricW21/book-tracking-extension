@@ -11,10 +11,31 @@
         <h1>Websites</h1>
         
         <div class="container m-3" id="website-table">
-            <div class="container m-3" id="website-row">
-                <div class="container m-3" id="website-template>
-                </div>
+             <div class="info-rows">   <!-- can be rows or novels or websites -->
+                <template class="website-row" id="website-row-template">
+                    <div>
+                        <h3 data-bind="website"></h3>
+                    </div>
+                    <div class="novels-inside-websites">
+                        
+                    </div>
+                </template>
+
+                <template class="novel-row" id="novel-row-template">
+                    <div>
+                        <label>Novel: </label>
+                        <p data-bind="novel-name"></p>
+                    </div>
+
+                    <div>
+                        <label>Last Chapter: </label>
+                        <a data-bind="novel-link"></a>
+                    </div>
+                </template>
+
+
             </div>
+        </div>
             
          
     </div>
