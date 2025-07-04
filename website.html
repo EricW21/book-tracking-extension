@@ -4,32 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Websites</title>
-    <link rel="stylesheet" href="bulma.min.css" />
+    <!-- <link rel="stylesheet" href="bulma.min.css" /> -->
+    <link rel="stylesheet" href="css/website.css" >
 </head>
 <body>
     <div class="container m-5">
         <h1>Websites</h1>
         
         <div class="container m-3" id="website-table">
-             <div class="info-rows">   <!-- can be rows or novels or websites -->
+             <div class="info-rows" id="info-rows-template">   <!-x- can be rows or novels or websites -->
                 <template class="website-row" id="website-row-template">
                     <div>
-                        <h3 data-bind="website"></h3>
+                        <h3 class="website"></h3>
                     </div>
-                    <div class="novels-inside-websites">
+                    <div class="novels-inside-websites" id="novels-inside-websites-template"">
                         
                     </div>
                 </template>
 
                 <template class="novel-row" id="novel-row-template">
-                    <div>
+                    <div class="novel-row-name">
                         <label>Novel: </label>
-                        <p data-bind="novel-name"></p>
+                        <p class="novel-name"></p>
                     </div>
 
-                    <div>
+                    <div class="novel-row-link">
                         <label>Last Chapter: </label>
-                        <a data-bind="novel-link"></a>
+                        <a class="novel-link"></a>
                     </div>
                 </template>
 
@@ -39,6 +40,8 @@
             
          
     </div>
+    <script src="js/Novel.js"></script>
+    <script src="js/Website.js"></script>
     <script src="js/loadWebsites.js"></script>
 </body>
 </html>
