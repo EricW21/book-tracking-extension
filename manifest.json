@@ -14,12 +14,8 @@
       "scripts": ["js/Novel.js","js/Website.js","background.js"]
       
     },
-    "content_scripts": [
-      {
-        "matches": ["<all_urls>"], 
-        "js": []
-      }
-    ],
+    
+    
     
     "host_permissions": [
       "http://localhost:3000/",
