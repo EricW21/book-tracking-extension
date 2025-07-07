@@ -52,7 +52,7 @@ class Website {
                 }
             }   
             if (!found) {
-                const newNovel = new Novel(tokens[this.novel], tokens[tokens.length - 1]);
+                const newNovel = new Novel(this.novel,tokens);
                 this.novels.unshift(newNovel);
             }
         }
@@ -96,6 +96,10 @@ class Website {
             novels: this.novels.map(n => n.toJSON?.() || n),
             generic: this.generic.toJSON?.() || this.generic
         };
+    }
+
+    recoverPath(novel,chapter) {
+        const url = this.domain + "/" + novel.path.join('/') +"/"+ chapter;
     }
     static fromJSON(obj) {
         const website = new Website(obj.domain);
