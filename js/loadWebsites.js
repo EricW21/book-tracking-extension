@@ -32,7 +32,7 @@ async function LoadWebsites() {
 async function LoadSingleWebsite(site) {
     
     let parent = websiteTemplate.content.cloneNode(true);
-    console.log(site);
+    
     let websiteName = parent.querySelector('.website');
     websiteName.textContent=site;
     container = parent.querySelector('.novels-inside-websites');
@@ -56,7 +56,7 @@ async function LoadNovels(parent,site) {
 
     
     for (const novel of website.novels) {
-        const node = await LoadSingleNovel(novel);
+        const node = await LoadSingleNovel(novel,website);
         parent.append(node);
     }
     
@@ -64,8 +64,8 @@ async function LoadNovels(parent,site) {
     
 }
 
-async function LoadSingleNovel(novel) {
-    console.log(novel.name);
+async function LoadSingleNovel(novel,website) {
+    
     let node = novelTemplate.content.cloneNode(true);
     
     let name = node.querySelector('.novel-name');
@@ -74,7 +74,7 @@ async function LoadSingleNovel(novel) {
 
     let link = node.querySelector('.novel-link');
     link.textContent = novel.lastChapter;
-    
+    link.href = website.recoverPath(novel,novel.lastChapter);
     return node;
     
 

@@ -9,7 +9,7 @@ class Website {
     // this is meant to store a generic novel object to account for edge cases
     //  (website has urls that aren't chapters, or chapters aren't a suburl of novels)
 
-    generic = new Novel("","");
+    generic = new Novel("",[],"");
     
     
     constructor(domain="") {
@@ -52,7 +52,9 @@ class Website {
                 }
             }   
             if (!found) {
-                const newNovel = new Novel(this.novel,tokens);
+                const path = tokens.slice(0,tokens.length-1);
+                console.log(path + " novel adding");
+                const newNovel = new Novel(tokens[this.novel],path,tokens[tokens.length-1]);
                 this.novels.unshift(newNovel);
             }
         }
@@ -99,7 +101,11 @@ class Website {
     }
 
     recoverPath(novel,chapter) {
-        const url = this.domain + "/" + novel.path.join('/') +"/"+ chapter;
+        console.log(novel.name);
+        console.log("path " + novel.path);
+        
+        const url = "https://" + this.domain + "/" + novel.path.join('/') +"/"+ chapter;
+        return url;
     }
     static fromJSON(obj) {
         const website = new Website(obj.domain);

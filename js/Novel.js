@@ -5,12 +5,13 @@ class Novel {
     lastChapter = "";
     lastChapter2 = "";
     path = []
-    constructor(novelIndex,  tokens) {
+    constructor(name,  path,lastChapter) {
         
-        this.name = tokens[novelIndex];
+        this.name = name;
         
-        this.lastChapter = tokens[tokens.length-1];
-        this.path = tokens.slice(0,tokens.length-1);
+        this.lastChapter = lastChapter;
+        this.path = path;
+        console.log("constructed with this path: " + this.path)
     }
     update(lastChapter) {
         this.lastChapter2 = this.lastChapter;
@@ -20,14 +21,15 @@ class Novel {
         return {
         name: this.name,
         lastChapter: this.lastChapter,
-        lastChapter2: this.lastChapter2
+        lastChapter2: this.lastChapter2,
+        path:this.path
         };
     }
 
   
 
     static fromJSON(obj) {
-        const novel = new Novel(obj.name, obj.lastChapter);
+        const novel = new Novel(obj.name,obj.path, obj.lastChapter);
         novel.lastChapter2 = obj.lastChapter2;
         return novel;
     }
