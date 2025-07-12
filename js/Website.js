@@ -9,7 +9,7 @@ class Website {
     // this is meant to store a generic novel object to account for edge cases
     //  (website has urls that aren't chapters, or chapters aren't a suburl of novels)
 
-    generic = new Novel("",[],"");
+    generic = new Novel("",[],"",0);
     
     
     constructor(domain="") {
@@ -20,7 +20,7 @@ class Website {
         return this.domain;
     }
 
-    updateNovel(tokens) {
+    updateNovel(tokens,timestamp) {
         
         // not a new chapter nor a new novel
         if (tokens.length==0) {
@@ -41,7 +41,7 @@ class Website {
             let found = false;
             for (let i = 0; i < this.novels.length; i++) {
                 if (this.novels[i].name === tokens[this.novel]) {
-                    this.novels[i].update(tokens[tokens.length - 1]);
+                    this.novels[i].update(tokens[tokens.length - 1],timestamp);
                     // Move the found novel to the first position for faster future access
                     if (i !== 0) {
                         const [found] = this.novels.splice(i, 1);
@@ -54,7 +54,7 @@ class Website {
             if (!found) {
                 const path = tokens.slice(0,tokens.length-1);
                 console.log(path + " novel adding");
-                const newNovel = new Novel(tokens[this.novel],path,tokens[tokens.length-1]);
+                const newNovel = new Novel(tokens[this.novel],path,tokens[tokens.length-1],timestamp);
                 this.novels.unshift(newNovel);
             }
         }
@@ -101,8 +101,7 @@ class Website {
     }
 
     recoverPath(novel,chapter) {
-        console.log(novel.name);
-        console.log("path " + novel.path);
+        
         
         const url = "https://" + this.domain + "/" + novel.path.join('/') +"/"+ chapter;
         return url;

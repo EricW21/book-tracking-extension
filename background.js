@@ -89,7 +89,7 @@ async function updateWebsite(website,url) {
     console.log("last website should be " + website + " and is " + lastWebsite.getDomain());
     this.tokens = new URL(url).pathname.split("/").filter(Boolean);
     console.log("tokens: " + this.tokens);
-    lastWebsite.updateNovel(this.tokens);
+    lastWebsite.updateNovel(this.tokens,Date.now());
     console.log("last website after update: " , lastWebsite);
     await chrome.storage.local.set({ [website]: lastWebsite.toJSON() }).then(() => {
         console.log("Website updated:", lastWebsite);

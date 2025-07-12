@@ -81,6 +81,20 @@ async function LoadSingleNovel(novel,website) {
     let link = node.querySelector('.novel-link');
     link.textContent = novel.lastChapter;
     link.href = website.recoverPath(novel,novel.lastChapter);
+
+    let timestamp = node.querySelector('.novel-timestamp');
+    const novelDate = new Date(novel.recentTimestamp); // Assuming numericDate is a timestamp
+
+    const day = String(novelDate.getDate()).padStart(2, '0');
+    const month = String(novelDate.getMonth() + 1).padStart(2, '0'); // Add 1 as month is 0-indexed
+    const year = novelDate.getFullYear();
+
+
+    timestamp.textContent = `${month}/${day}/${year}`;
+
+    
+    console.log(novel);
+
     return node;
     
 
