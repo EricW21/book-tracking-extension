@@ -9,7 +9,13 @@ InitializePage()
 let lastWebsite = new Website();
 
 
+
 async function InitializePage() {
+
+    document.getElementById('exportData').addEventListener('click', exportData);
+    document.getElementById('importData').addEventListener('click', importData);
+
+
     websiteTemplate = document.getElementById("website-row-template");
     novelTemplate = document.getElementById("novel-row-template");
     const result = await chrome.storage.local.get(["trackedWebsites"]);
@@ -78,4 +84,24 @@ async function LoadSingleNovel(novel,website) {
     return node;
     
 
+}
+
+
+async function importData() {
+
+}
+
+async function exportData() {
+    chrome.storage.local.get(null, function(items) {
+        
+        const blob = new Blob([JSON.stringify(items, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = "novel_data_progress_tracker.json";
+        a.click();
+
+        URL.revokeObjectURL(url);
+    });
 }

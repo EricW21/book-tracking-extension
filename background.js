@@ -10,7 +10,7 @@ const keywords = ["novel", "transla", "manga"];
 let lastWebsite = new Website();
 
 /** @type {string[]} */
-        const start = ["novelupdates.com", "wuxiaworld.com", "royalroad.com","comick.io", "katreadingcafe.com", "mangadex.org"];
+        const start = ["novelupdates.com", "wuxiaworld.com", "royalroad.com","comick.io", "mangadex.org"];
 /** 
  * @returns {Promise<void>}
  */
