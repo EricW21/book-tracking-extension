@@ -106,6 +106,33 @@ class Website {
         const url = "https://" + this.domain + "/" + novel.path.join('/') +"/"+ chapter;
         return url;
     }
+
+    addWebsite(website) {
+        // combines websites
+        // whichever novel instance takes priority depends on the timestamp
+        let thisWebsitesNovels = {};
+
+        for (let i=0;i<this.novels.length;i++) {
+            const novel = this.novels[i];
+            thisWebsitesNovels[novel.name] = i;
+        }
+
+        for (let i=0;i<website.novels.length;i++) {
+            const novel = website.novels[i];
+            if (thisWebsitesNovels.has(novel.name)) {
+                const index = thisWebsitesNovels[novel.name];
+
+                // the most recent novel should be set to the novel being called on
+                this.novels[index] = (n1.recentTimestamp < n2.recentTimestamp) ? n2 : n1;
+                
+            }
+            else {
+                website.novels.add(novel);
+            }
+        }
+    }
+
+    
     static fromJSON(obj) {
         const website = new Website(obj.domain);
         website.novel = obj.novel;
