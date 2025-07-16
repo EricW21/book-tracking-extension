@@ -8,6 +8,7 @@ let novelTemplate;
 InitializePage()
 let lastWebsite = new Website();
 
+let tracked = new Set();
 
 
 async function InitializePage() {
@@ -19,7 +20,10 @@ async function InitializePage() {
     websiteTemplate = document.getElementById("website-row-template");
     novelTemplate = document.getElementById("novel-row-template");
     const result = await chrome.storage.local.get(["trackedWebsites"]);
-    trackedWebsites = new Set(result.trackedWebsites || []);
+    tracked = new Set(result.trackedWebsites || []);
+    trackedWebsites = 
+
+    console.log(tracked);
     main = document.getElementById("info-rows-template");
     await LoadWebsites();
 }
@@ -29,14 +33,14 @@ async function InitializePage() {
 async function LoadWebsites() {
     // add the main div
     
-    for (const site of trackedWebsites) {
+    for (const site of tracked) {
         await LoadSingleWebsite(site);
     }
     
 }
 
 async function LoadSingleWebsite(site) {
-    
+    console.log("loading single website " + site);
     let parent = websiteTemplate.content.cloneNode(true);
     
     let websiteName = parent.querySelector('.website');
@@ -106,20 +110,41 @@ async function importData() {
     if (fileInput) {
       fileInput.click();
     }
-     fileInput.onchange = async (event) => {
-      const file = event.target.files[0];
+    fileInput.onchange = async (event) => {
+        const file = event.target.files[0];
 
-      if (file) {
-        try {
-          const text = await file.text();
-          const jsonData = JSON.parse(text); 
-
-          console.log("JSON object:", jsonData);
-        } catch (error) {
-          console.error("Error reading or parsing JSON file:", error);
+        if (file) {
+            try {
+            const text = await file.text();
+            const jsonData = JSON.parse(text); 
+            loadJsonData(jsonData);
+            console.log("JSON object:", jsonData);
+            } catch (error) {
+            console.error("Error reading or parsing JSON file:", error);
+            }
         }
-      }
     }
+}
+
+async function loadJsonData(jsonData) {
+    
+    
+    console.log("typeof setWebsite:", typeof setWebsite);
+    for (const [key, value] of Object.entries(jsonData)) {
+        if (typeof value === 'object' && !Array.isArray(value) && value.domain) {
+            const result = await chrome.storage.local.get([site]);
+            let firstWebsite = Website.fromJSON(result);
+            
+            let website  = Website.fromJSON(value);
+            firstWebsite.addWebsite(website);
+            setWebsite(firstWebsite);
+            if (!tracked.has(website.domain)) {
+                tracked.add(website.domain);
+                chrome.storage.local.set({ trackedWebsites: [...tracked] });
+            }  
+        }
+    }
+    location.reload();
 }
 
 

@@ -91,9 +91,11 @@ async function updateWebsite(website,url) {
     console.log("tokens: " + this.tokens);
     lastWebsite.updateNovel(this.tokens,Date.now());
     console.log("last website after update: " , lastWebsite);
-    await chrome.storage.local.set({ [website]: lastWebsite.toJSON() }).then(() => {
-        console.log("Website updated:", lastWebsite);
-    });
+
+    setWebsite(lastWebsite);
+    // await chrome.storage.local.set({ [website]: lastWebsite.toJSON() }).then(() => {
+    //     console.log("Website updated:", lastWebsite);
+    // });
 
     chrome.storage.local.get(null, function(items) {
         
@@ -160,6 +162,10 @@ async function addWebsite(site) {
     });
 }
 
+
+
+
+
 /**
  * @param {string} site
  * @returns {boolean}
@@ -177,3 +183,6 @@ chrome.tabs.onUpdated.addListener(async function(tabId, changeInfo, tab) {
 chrome.tabs.onCreated.addListener(async function(tab) {
     await getCurrentTab();
 });
+
+
+

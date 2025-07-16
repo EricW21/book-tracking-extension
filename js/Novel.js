@@ -39,3 +39,12 @@ class Novel {
         return novel;
     }
 }
+
+
+
+async function setWebsite(website) {
+    await chrome.storage.local.set({ [website.domain]: website.toJSON() }).then(() => {
+        console.log("Website updated:", lastWebsite);
+        
+    });
+}

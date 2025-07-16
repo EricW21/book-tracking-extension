@@ -24,6 +24,6 @@
     display: None;
 }
 
-/* .novel-row-group {
-    margin: 3px;
-} */
+.novel-row-group {
+    margin: 20px 0;
+}
