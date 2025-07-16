@@ -12,9 +12,12 @@
 
 
         <h1>Reading Progress Tracker</h1>
-        <button id="importData">
+        <input type="file" id="fileInput" multiple accept=".json" />
+        <button id="importData" type="button">
             Import Data
         </button>
+
+    
 
         <button id="exportData">
             Download Novel Data
@@ -37,19 +40,21 @@
                 </template>
 
                 <template class="novel-row" id="novel-row-template">
-                    <div class="novel-row-entry">
-                        <label>Novel: </label>
-                        <p class="novel-name"></p>
-                    </div>
+                    <div class="novel-row-group">
+                        <div class="novel-row-entry">
+                            <label>Novel: </label>
+                            <p class="novel-name"></p>
+                        </div>
 
-                    <div class="novel-row-entry">
-                        <label>Last Chapter: </label>
-                        <a class="novel-link"></a>
-                    </div>
+                        <div class="novel-row-entry">
+                            <label>Last Chapter: </label>
+                            <a class="novel-link"></a>
+                        </div>
 
-                    <div class="novel-row-entry">
-                        <label>Last Viewed</label>
-                        <p class="novel-timestamp"></p>
+                        <div class="novel-row-entry">
+                            <label>Last Viewed</label>
+                            <p class="novel-timestamp"></p>
+                        </div>
                     </div>
                 </template>
 

@@ -102,8 +102,26 @@ async function LoadSingleNovel(novel,website) {
 
 
 async function importData() {
+    const fileInput = document.getElementById("fileInput");
+    if (fileInput) {
+      fileInput.click();
+    }
+     fileInput.onchange = async (event) => {
+      const file = event.target.files[0];
 
+      if (file) {
+        try {
+          const text = await file.text();
+          const jsonData = JSON.parse(text); 
+
+          console.log("JSON object:", jsonData);
+        } catch (error) {
+          console.error("Error reading or parsing JSON file:", error);
+        }
+      }
+    }
 }
+
 
 async function exportData() {
     chrome.storage.local.get(null, function(items) {

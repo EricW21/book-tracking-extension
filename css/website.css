@@ -19,3 +19,11 @@
     word-wrap:anywhere;
     max-width:700px;
 }
+
+#fileInput {
+    display: None;
+}
+
+/* .novel-row-group {
+    margin: 3px;
+} */
