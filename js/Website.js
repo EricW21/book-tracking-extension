@@ -2,18 +2,16 @@
 
 class Website {
     domain = "";
-    novel = 1;
-    chapter = 2;
+    novelIndex = 1;
+    chapterIndex = 2;
     novels = [];
 
-    // this is meant to store a generic novel object to account for edge cases
-    //  (website has urls that aren't chapters, or chapters aren't a suburl of novels)
-
-    generic = new Novel("",[],"",0);
     
-    
-    constructor(domain="") {
+    // gonna enforce an unchanging novelIndex and chapterIndex
+    constructor(domain="",novelIndex=1,chapterIndex=2) {
         this.domain = domain;
+        this.novelIndex = novelIndex;
+        this.chapterIndex = chapterIndex;
     }
 
     getDomain() {
@@ -22,30 +20,25 @@ class Website {
 
     updateNovel(tokens,timestamp) {
         
-        // not a new chapter nor a new novel
+        
         if (tokens.length==0) {
             return;
         }
-        if (tokens.length < this.novel) {
+        if (tokens.length < this.chapterIndex) {
             return;
         }
-
-        
-        this.updateWebsiteURL(tokens.length);
         
 
-        if (this.chapter==this.novel) {
-            this.generic.update(tokens[tokens.length-1]);
-        }
-        else if (tokens.length == this.chapter + 1) {
+        
+        if (tokens.length >= this.chapterIndex + 1) {
             let found = false;
             for (let i = 0; i < this.novels.length; i++) {
-                if (this.novels[i].name === tokens[this.novel]) {
+                if (this.novels[i].name === tokens[this.novelIndex]) {
                     this.novels[i].update(tokens[tokens.length - 1],timestamp);
                     // Move the found novel to the first position for faster future access
-                    if (i !== 0) {
-                        const [found] = this.novels.splice(i, 1);
-                        this.novels.unshift(found);
+                    if (i > 0) {
+                        const [removed] = this.novels.splice(i, 1);
+                        this.novels.unshift(removed);
                     }
                     found = true;
                     break;
@@ -54,7 +47,7 @@ class Website {
             if (!found) {
                 const path = tokens.slice(0,tokens.length-1);
                 console.log(path + " novel adding");
-                const newNovel = new Novel(tokens[this.novel],path,tokens[tokens.length-1],timestamp);
+                const newNovel = new Novel(tokens[this.novelIndex],path,tokens[tokens.length-1],timestamp);
                 this.novels.unshift(newNovel);
             }
         }
@@ -62,39 +55,12 @@ class Website {
         
         
     
-    updateWebsiteURL(pathLength) {
-        pathLength -=1; // accounts for the fact that a pathlength of 1 means that the zero index contains a value
-
-        // new beginning
-        if (this.novel==0 && this.chapter==0) {
-            this.novel = pathLength-1;
-            if (this.novel<0) {
-                this.novel = 0;
-            }
-            this.chapter = pathLength;
-            return;
-        }
-        // accounts for the case when the url is longer than the current novel and chapter 
-        if (pathLength > this.novel) {
-            if (pathLength > this.chapter) {
-                this.novel = this.chapter;
-                this.chapter = pathLength;
-            }
-            else if (pathLength!=this.chapter) {
-                this.novel = pathLength;
-            }
-        }
-
-        // accounts for the case when the url is shorter than the current novel and chapter but novel==chapter
-        if (pathLength < this.novel && this.novel==this.chapter) {
-            this.novel = pathLength;
-        }
-    }
+    
     toJSON() {
         return {
             domain: this.domain,
-            novel: this.novel,
-            chapter: this.chapter,
+            novel: this.novelIndex,
+            chapter: this.chapterIndex,
             novels: this.novels.map(n => n.toJSON?.() || n)
             
         };
@@ -136,9 +102,9 @@ class Website {
 
     
     static fromJSON(obj) {
-        const website = new Website(obj.domain);
-        website.novel = obj.novel;
-        website.chapter = obj.chapter;
+        const website = new Website(obj.domain,obj.novelIndex,obj.chapterIndex);
+        website.novelIndex = obj.novel;
+        website.chapterIndex = obj.chapter;
         
         website.novels = Array.isArray(obj.novels)
             ? obj.novels.map(n => Novel.fromJSON?.(n) || n)

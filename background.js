@@ -5,12 +5,23 @@ let trackedWebsites = new Set();
 initializeTrackedWebsites();
 
 /** @type {string[]} */
-const keywords = ["novel", "transla", "manga"];
+
+// const keywords = ["novel", "transla", "manga"];
+const keywords = ["novel"];
 
 let lastWebsite = new Website();
 
-/** @type {string[]} */
-        const start = ["novelupdates.com", "wuxiaworld.com", "royalroad.com","comick.io", "mangadex.org"];
+
+
+const startingSites = [
+    ["novelupdates.com", 1, 2],
+    ["wuxiaworld.com", 1, 2],
+    ["royalroad.com", 1, 4],
+    ["comick.io", 1, 2],
+    ["mangadex.org", 1, 2],
+];
+
+
 /** 
  * @returns {Promise<void>}
  */
@@ -21,8 +32,10 @@ async function initializeTrackedWebsites() {
         trackedWebsites = new Set(result.trackedWebsites || []);
 
         
-        start.forEach(addWebsite);
-        start.forEach(site => trackedWebsites.add(site));
+        startingSites.forEach(([site, novelIndex, chapterIndex]) => {
+            addWebsite(site, novelIndex, chapterIndex);
+        });
+        
     } catch (error) {
         console.error("Error retrieving tracked websites:", error);
     }
@@ -89,6 +102,8 @@ async function updateWebsite(website,url) {
     console.log("last website should be " + website + " and is " + lastWebsite.getDomain());
     this.tokens = new URL(url).pathname.split("/").filter(Boolean);
     console.log("tokens: " + this.tokens);
+
+    
     lastWebsite.updateNovel(this.tokens,Date.now());
     console.log("last website after update: " , lastWebsite);
 
@@ -147,11 +162,11 @@ function extractWebsite(url) {
  * @param {string} site
  * @returns {Promise<void>}
  */
-async function addWebsite(site) {
+async function addWebsite(site, novelIndex, chapterIndex) {
     if (isTrackedWebsite(site)) {
         return;
     }
-    chrome.storage.local.set({ [site]: new Website(site).toJSON() });
+    chrome.storage.local.set({ [site]: new Website(site,novelIndex,chapterIndex).toJSON() });
     
     trackedWebsites.add(site);
     chrome.storage.local.set({ trackedWebsites: Array.from(trackedWebsites) });
