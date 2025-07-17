@@ -32,7 +32,7 @@ class Website {
 
         
         this.updateWebsiteURL(tokens.length);
-        console.log("novel: " + this.novel + " chapter: " + this.chapter);
+        
 
         if (this.chapter==this.novel) {
             this.generic.update(tokens[tokens.length-1]);
@@ -95,8 +95,8 @@ class Website {
             domain: this.domain,
             novel: this.novel,
             chapter: this.chapter,
-            novels: this.novels.map(n => n.toJSON?.() || n),
-            generic: this.generic.toJSON?.() || this.generic
+            novels: this.novels.map(n => n.toJSON?.() || n)
+            
         };
     }
 
@@ -110,24 +110,26 @@ class Website {
     addWebsite(website) {
         // combines websites
         // whichever novel instance takes priority depends on the timestamp
-        let thisWebsitesNovels = {};
+        let thisWebsitesNovels = new Map();
 
         for (let i=0;i<this.novels.length;i++) {
             const novel = this.novels[i];
-            thisWebsitesNovels[novel.name] = i;
+            thisWebsitesNovels.set(novel.name,i);
         }
 
         for (let i=0;i<website.novels.length;i++) {
             const novel = website.novels[i];
             if (thisWebsitesNovels.has(novel.name)) {
-                const index = thisWebsitesNovels[novel.name];
-
+                const index = thisWebsitesNovels.get(novel.name);
+                
+                const n1 = this.novels[index];
+                const n2 = novel;
                 // the most recent novel should be set to the novel being called on
                 this.novels[index] = (n1.recentTimestamp < n2.recentTimestamp) ? n2 : n1;
                 
             }
             else {
-                website.novels.add(novel);
+                this.novels.push(novel);
             }
         }
     }
@@ -137,7 +139,7 @@ class Website {
         const website = new Website(obj.domain);
         website.novel = obj.novel;
         website.chapter = obj.chapter;
-        website.generic = Novel.fromJSON?.(obj.generic) || obj.generic;
+        
         website.novels = Array.isArray(obj.novels)
             ? obj.novels.map(n => Novel.fromJSON?.(n) || n)
             : [];

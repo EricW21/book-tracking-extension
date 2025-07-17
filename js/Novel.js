@@ -34,6 +34,7 @@ class Novel {
   
 
     static fromJSON(obj) {
+        
         const novel = new Novel(obj.name,obj.path, obj.lastChapter,obj.recentTimestamp);
         novel.lastChapter2 = obj.lastChapter2;
         return novel;
@@ -44,7 +45,7 @@ class Novel {
 
 async function setWebsite(website) {
     await chrome.storage.local.set({ [website.domain]: website.toJSON() }).then(() => {
-        console.log("Website updated:", lastWebsite);
+        console.log("Website updated:", website.toJSON());
         
     });
 }

@@ -40,7 +40,7 @@ async function LoadWebsites() {
 }
 
 async function LoadSingleWebsite(site) {
-    console.log("loading single website " + site);
+    
     let parent = websiteTemplate.content.cloneNode(true);
     
     let websiteName = parent.querySelector('.website');
@@ -129,19 +129,32 @@ async function importData() {
 async function loadJsonData(jsonData) {
     
     
-    console.log("typeof setWebsite:", typeof setWebsite);
+    console.log("Entries in jsonData:", Object.keys(jsonData).length);
     for (const [key, value] of Object.entries(jsonData)) {
         if (typeof value === 'object' && !Array.isArray(value) && value.domain) {
-            const result = await chrome.storage.local.get([site]);
-            let firstWebsite = Website.fromJSON(result);
+            if (performance?.memory) {
+                console.log(`🧠 Memory BEFORE processing "${key}":`, performance.memory.usedJSHeapSize);
+            }
+            console.log("key and value: ",key,JSON.stringify(value, null, 2));
+            const result = await chrome.storage.local.get([key]);
+            
+            let firstWebsite = Website.fromJSON(result[key]);
             
             let website  = Website.fromJSON(value);
+
+            
             firstWebsite.addWebsite(website);
             setWebsite(firstWebsite);
+
+            
             if (!tracked.has(website.domain)) {
                 tracked.add(website.domain);
                 chrome.storage.local.set({ trackedWebsites: [...tracked] });
             }  
+
+            if (performance?.memory) {
+                console.log(`🧠 Memory AFTEr Processing "${key}":`, performance.memory.usedJSHeapSize);
+            }
         }
     }
     location.reload();
