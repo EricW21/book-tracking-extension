@@ -14,9 +14,12 @@ class Novel {
         this.path = path;
         
     }
-    update(lastChapter,timestamp) {
+    update(tokens,timestamp) {
         
-        this.lastChapter = lastChapter;
+        this.lastChapter = tokens[tokens.length-1];
+
+        console.log("update chapter" + this.lastChapter);
+        this.path = tokens.slice(0, -1);
         this.recentTimestamp = timestamp;
     }
     toJSON() {

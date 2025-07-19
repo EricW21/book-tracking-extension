@@ -19,14 +19,10 @@ class Website {
     }
 
     updateNovel(tokens,timestamp) {
+        console.log("website recieves tokens:"+ tokens);
         
         
-        if (tokens.length==0) {
-            return;
-        }
-        if (tokens.length < this.chapterIndex) {
-            return;
-        }
+        
         
 
         
@@ -34,7 +30,8 @@ class Website {
             let found = false;
             for (let i = 0; i < this.novels.length; i++) {
                 if (this.novels[i].name === tokens[this.novelIndex]) {
-                    this.novels[i].update(tokens[tokens.length - 1],timestamp);
+                    console.log("website sends tokens:"+ tokens);
+                    this.novels[i].update(tokens,timestamp);
                     // Move the found novel to the first position for faster future access
                     if (i > 0) {
                         const [removed] = this.novels.splice(i, 1);

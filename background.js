@@ -100,11 +100,11 @@ async function updateWebsite(website,url) {
     await SetRecentWebsite(website);
 
     console.log("last website should be " + website + " and is " + lastWebsite.getDomain());
-    this.tokens = new URL(url).pathname.split("/").filter(Boolean);
-    console.log("tokens: " + this.tokens);
 
     
-    lastWebsite.updateNovel(this.tokens,Date.now());
+
+
+    lastWebsite.updateNovel(new URL(url).pathname.split("/").filter(Boolean),Date.now());
     console.log("last website after update: " , lastWebsite);
 
     setWebsite(lastWebsite);

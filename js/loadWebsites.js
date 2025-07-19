@@ -1,6 +1,6 @@
 
 
-let trackedWebsites = [];
+
 let websiteTemplate;
 let main;
 let novelTemplate;
@@ -21,7 +21,7 @@ async function InitializePage() {
     novelTemplate = document.getElementById("novel-row-template");
     const result = await chrome.storage.local.get(["trackedWebsites"]);
     tracked = new Set(result.trackedWebsites || []);
-    trackedWebsites = 
+    
 
     console.log(tracked);
     main = document.getElementById("info-rows-template");
