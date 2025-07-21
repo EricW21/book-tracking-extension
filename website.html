@@ -13,19 +13,34 @@
 
         <h1>Reading Progress Tracker</h1>
         <input type="file" id="fileInput" multiple accept=".json" />
-        <button id="importData" type="button">
+        <button id="import-data" type="button">
             Import Data
         </button>
 
     
 
-        <button id="exportData">
+        <button id="export-data">
             Download Novel Data
         </button>
 
-        <button id="toggleNovel">
+        <button id="toggle-novel">
             View by Novel
         </button>
+
+        <button id="add-website-button">
+            Add Website to Track
+        </button>
+        <div id="add-website-div">
+            <form id="add-website-form">
+                <label for="website-novel">Give a link to a novel for a website</label><br>
+                <textarea id="website-novel" name="website-novel" placeholder="Example: https://Example.com/.../example-novel-name/" rows="2" cols="100"></textarea><br><br>
+
+                <label for="chapter">Give a link to a chapter of a novel for a website</label><br>
+                <textarea id="chapter" name="chapter" placeholder="Example: https://Example.com/.../example-novel-name/chapter-1" rows="2" cols="100"></textarea><br><br>
+
+                <button type="submit">Send</button>
+            </form>
+        </div>
         
         
         <div class="container m-3" id="website-table">

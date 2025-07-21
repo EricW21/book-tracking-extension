@@ -27,3 +27,7 @@
 .novel-row-group {
     margin: 20px 0;
 }
+
+#add-website-div {
+    display: none;
+}

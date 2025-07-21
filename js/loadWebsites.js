@@ -12,9 +12,10 @@ let tracked = new Set();
 
 
 async function InitializePage() {
-
-    document.getElementById('exportData').addEventListener('click', exportData);
-    document.getElementById('importData').addEventListener('click', importData);
+    document.getElementById("add-website-form").addEventListener("submit", handleWebsiteForm);
+    document.getElementById('add-website-button').addEventListener('click',toggleWebsiteForm);
+    document.getElementById('export-data').addEventListener('click', exportData);
+    document.getElementById('import-data').addEventListener('click', importData);
 
 
     websiteTemplate = document.getElementById("website-row-template");
@@ -105,6 +106,7 @@ async function LoadSingleNovel(novel,website) {
 }
 
 
+
 async function importData() {
     const fileInput = document.getElementById("fileInput");
     if (fileInput) {
@@ -174,4 +176,20 @@ async function exportData() {
 
         URL.revokeObjectURL(url);
     });
+}
+
+
+function toggleWebsiteForm() {  
+    const form = document.getElementById("add-website-div");
+    if (form.style.display === "none" || form.style.display=="") {
+      form.style.display = "block";
+    } else {
+      form.style.display = "none";
+    }
+}
+
+async function handleWebsiteForm(event) {
+    event.preventDefault();
+    const novelUrl = document.getElementById("website-novel").value.trim();
+    const chapterUrl = document.getElementById("chapter").value.trim();
 }
