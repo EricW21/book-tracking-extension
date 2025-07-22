@@ -6,7 +6,7 @@ let main;
 let novelTemplate;
 
 InitializePage()
-let lastWebsite = new Website();
+
 
 let tracked = new Set();
 
@@ -23,10 +23,22 @@ async function InitializePage() {
     const result = await chrome.storage.local.get(["trackedWebsites"]);
     tracked = new Set(result.trackedWebsites || []);
     
-
     console.log(tracked);
     main = document.getElementById("info-rows-template");
+
+    // let novelToggle = document.getElementById("toggle-novel");
+    // if (novelToggle && novelToggle.textContent.trim()!="View by Novel") {
+    //     novelToggle.textContent = "View by Website";
+    //     await LoadAllNovels(main);
+    // }
+    // else {
+    //     novelToggle.textContent="View by Novel";
+    //     await LoadWebsites();
+    // }
+
     await LoadWebsites();
+    
+    
 }
 
 
@@ -56,6 +68,17 @@ async function LoadSingleWebsite(site) {
    
     // append the div to the main div
 
+}
+
+async function LoadAllNovels(parent) {
+    for (const site of tracked) {
+        const result = await chrome.storage.local.get([site]);
+        let website = Website.fromJSON(result[site]);
+        for (const novel of website.novels) {
+            const node = await LoadSingleNovel(novel,website);
+            parent.append(node);
+        }
+    }
 }
 
 async function LoadNovels(parent,site) {
@@ -189,7 +212,19 @@ function toggleWebsiteForm() {
 }
 
 async function handleWebsiteForm(event) {
-    event.preventDefault();
-    const novelUrl = document.getElementById("website-novel").value.trim();
-    const chapterUrl = document.getElementById("chapter").value.trim();
+    
+    const novelText = document.getElementById("website-novel").value.trim();
+    const chapterText = document.getElementById("chapter").value.trim();
+    let novelUrl = new URL(novelText);
+    let chapterUrl = new URL(chapterText);
+
+    if (novelUrl.hostname!=chapter.hostname) {
+        alert("novel links are from different websites");
+        event.preventDefault();
+    }
+    //.pathname.split("/").filter(Boolean);
+    console.log("novel" + novelUrl);
+    console.log("chapter" + chapterUrl);
+
+
 }
