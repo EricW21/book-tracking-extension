@@ -215,9 +215,17 @@ async function handleWebsiteForm(event) {
     
     const novelText = document.getElementById("website-novel").value.trim();
     const chapterText = document.getElementById("website-chapter").value.trim();
-    let novelUrl = new URL(novelText);
-    let chapterUrl = new URL(chapterText);
 
+    try {
+        let novelUrl = new URL(novelText);
+        let chapterUrl = new URL(chapterText);
+    }
+    catch {
+        alert("Not a Valid URL");
+        event.preventDefault();
+    }
+    
+    
     let novelSite = extractWebsite(novelText);
     let chapterSite = extractWebsite(chapterText);
     console.log(novelUrl.hostname);
@@ -232,10 +240,21 @@ async function handleWebsiteForm(event) {
         event.preventDefault();
     }
 
+    let novelIndex = novelUrl.pathname.split("/").length;
+    let chapterIndex = chapterUrl.pathname.split("/").length;
 
+    let addedWebsite = new Website(novelSite,novelIndex,chapterIndex);
+    tracked.add(addedWebsite.domain);
+    chrome.storage.local.set({ trackedWebsites: Array.from(tracked) });
+    setWebsite(addedWebsite);
+
+    chrome.storage.local.get(null, function(items) {
+        
+        console.log(items);
+    });
     //.pathname.split("/").filter(Boolean);
-    console.log("novel" + novelUrl);
-    console.log("chapter" + chapterUrl);
+    // console.log("novel" + novelUrl);
+    // console.log("chapter" + chapterUrl);
 
 
 }
