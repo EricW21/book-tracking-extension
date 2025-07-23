@@ -52,3 +52,21 @@ async function setWebsite(website) {
         
     });
 }
+
+/**
+ * @param {string} url
+ * @returns {string}
+ */
+function extractWebsite(url) {
+    try {
+        const hostname = new URL(url).hostname;
+        const parts = hostname.split('.');
+        if (parts.length >= 2) {
+            return parts.slice(-2).join('.');
+        }
+        return hostname;
+    } catch (e) {
+        console.error("Not an URL", url);
+        return "";
+    }
+}

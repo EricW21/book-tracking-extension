@@ -214,17 +214,29 @@ function toggleWebsiteForm() {
 async function handleWebsiteForm(event) {
     
     const novelText = document.getElementById("website-novel").value.trim();
-    const chapterText = document.getElementById("chapter").value.trim();
+    const chapterText = document.getElementById("website-chapter").value.trim();
     let novelUrl = new URL(novelText);
     let chapterUrl = new URL(chapterText);
 
-    if (novelUrl.hostname!=chapter.hostname) {
+    let novelSite = extractWebsite(novelText);
+    let chapterSite = extractWebsite(chapterText);
+    console.log(novelUrl.hostname);
+    console.log(chapterUrl.hostname);
+    console.log(novelSite);
+    if (novelSite!=chapterSite) {
         alert("novel links are from different websites");
         event.preventDefault();
     }
+    else if (tracked.has(novelSite)) {
+        alert("website is already being tracked");
+        event.preventDefault();
+    }
+
+
     //.pathname.split("/").filter(Boolean);
     console.log("novel" + novelUrl);
     console.log("chapter" + chapterUrl);
 
 
 }
+
