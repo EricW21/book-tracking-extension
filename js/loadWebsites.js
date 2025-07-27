@@ -5,6 +5,11 @@ let websiteTemplate;
 let main;
 let novelTemplate;
 
+
+novelFilters = {};
+websiteFilters = {};
+
+
 InitializePage()
 
 
@@ -16,6 +21,11 @@ async function InitializePage() {
     document.getElementById('add-website-button').addEventListener('click',toggleWebsiteForm);
     document.getElementById('export-data').addEventListener('click', exportData);
     document.getElementById('import-data').addEventListener('click', importData);
+    const checkbox = document.getElementById("novel-toggle");
+    checkbox.checked = localStorage.getItem("novel-toggle")==="novel";
+
+    checkbox.addEventListener('change',toggleNovel);
+    
 
 
     websiteTemplate = document.getElementById("website-row-template");
@@ -26,17 +36,14 @@ async function InitializePage() {
     console.log(tracked);
     main = document.getElementById("info-rows-template");
 
-    // let novelToggle = document.getElementById("toggle-novel");
-    // if (novelToggle && novelToggle.textContent.trim()!="View by Novel") {
-    //     novelToggle.textContent = "View by Website";
-    //     await LoadAllNovels(main);
-    // }
-    // else {
-    //     novelToggle.textContent="View by Novel";
-    //     await LoadWebsites();
-    // }
-
-    await LoadWebsites();
+    let toggleValue = localStorage.getItem('novel-toggle');
+    if (toggleValue===null || toggleValue==="website") {
+        await LoadWebsites();
+    }
+    else {
+        await LoadAllNovels();
+    }
+    
     
     
 }
@@ -257,5 +264,18 @@ async function handleWebsiteForm(event) {
     // console.log("chapter" + chapterUrl);
 
 
+}
+
+
+async function toggleNovel() {
+    let toggleValue = localStorage.getItem("novel-toggle");
+    if (toggleValue==="novel") {
+        localStorage.setItem("novel-toggle","website");
+    }
+    else {
+        localStorage.setItem("novel-toggle","novel");
+    }
+
+    console.log("toggled" + localStorage.getItem("novel-toggle"));
 }
 
