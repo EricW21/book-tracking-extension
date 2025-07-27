@@ -35,14 +35,9 @@ async function InitializePage() {
     
     console.log(tracked);
     main = document.getElementById("info-rows-template");
+    refreshData();
 
-    let toggleValue = localStorage.getItem('novel-toggle');
-    if (toggleValue===null || toggleValue==="website") {
-        await LoadWebsites();
-    }
-    else {
-        await LoadAllNovels();
-    }
+    
     
     
     
@@ -83,7 +78,7 @@ async function LoadAllNovels(parent) {
         let website = Website.fromJSON(result[site]);
         for (const novel of website.novels) {
             const node = await LoadSingleNovel(novel,website);
-            parent.append(node);
+            main.append(node);
         }
     }
 }
@@ -216,6 +211,7 @@ function toggleWebsiteForm() {
     } else {
       form.style.display = "none";
     }
+    refreshData();
 }
 
 async function handleWebsiteForm(event) {
@@ -275,7 +271,21 @@ async function toggleNovel() {
     else {
         localStorage.setItem("novel-toggle","novel");
     }
-
+    
     console.log("toggled" + localStorage.getItem("novel-toggle"));
+    refreshData();
 }
 
+async function refreshData() {
+
+    main.innerHTML = "";
+    let toggleValue = localStorage.getItem('novel-toggle');
+    if (toggleValue===null || toggleValue==="website") {
+        console.log("loading websites");
+        await LoadWebsites();
+    }
+    else {
+        console.log("loading all novels");
+        await LoadAllNovels();
+    }
+}
