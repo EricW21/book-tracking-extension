@@ -246,7 +246,7 @@ async function handleWebsiteForm(event) {
     let novelIndex = novelUrl.pathname.split("/").length;
     let chapterIndex = chapterUrl.pathname.split("/").length;
 
-    let addedWebsite = new Website(novelSite,novelIndex,chapterIndex);
+    let addedWebsite = new Website(novelSite,novelIndex-1,chapterIndex-1);
     tracked.add(addedWebsite.domain);
     chrome.storage.local.set({ trackedWebsites: Array.from(tracked) });
     setWebsite(addedWebsite);
