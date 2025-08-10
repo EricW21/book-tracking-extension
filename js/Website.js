@@ -5,13 +5,14 @@ class Website {
     novelIndex = 1;
     chapterIndex = 2;
     novels = [];
-
+    
     
     // gonna enforce an unchanging novelIndex and chapterIndex
     constructor(domain="",novelIndex=1,chapterIndex=2) {
         this.domain = domain;
         this.novelIndex = novelIndex;
         this.chapterIndex = chapterIndex;
+        
     }
 
     getDomain() {

@@ -5,11 +5,17 @@ let websiteTemplate;
 let main;
 let novelTemplate;
 
+// 0 is timestamp
 
-novelFilters = {};
-websiteFilters = {};
+//1 for novels is popular
+let novelFilters = {primary: 0, order : "desc"};
+
+//1 for websites is number of novels
+let websiteFilters = {primary: 0, order : "desc"};
 
 
+let websiteList = [];
+let novelList = [];
 InitializePage()
 
 
@@ -48,8 +54,30 @@ async function InitializePage() {
 async function LoadWebsites() {
     // add the main div
     
+    
     for (const site of tracked) {
-        await LoadSingleWebsite(site);
+        let result = await chrome.storage.local.get([site]);
+        console.log(result);
+        websiteList.push(result[site]);
+        
+    }
+
+    websiteList.sort((a,b)=> {
+        let sign = 1;
+        if (websiteFilters.order=='desc') {
+            sign = -1;
+        }
+        console.log("a "+ JSON.stringify(a));
+        let first = (a["novels"].length>0) ? a["novels"].recentTimestamp : 0;
+        let second = (b["novels"].length>0) ? b["novels"][0].recentTimestamp : 0;
+        if (websiteFilters.primary==0) {
+            return sign* (first-second);
+        }
+
+    })
+
+    for (let i=0;i<websiteList.length;i++) {
+        LoadSingleWebsite(websiteList[i].domain);
     }
     
 }
