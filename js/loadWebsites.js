@@ -14,8 +14,6 @@ let novelFilters = {primary: 0, order : "desc"};
 let websiteFilters = {primary: 0, order : "desc"};
 
 
-let websiteList = [];
-let novelList = [];
 InitializePage()
 
 
@@ -54,7 +52,7 @@ async function InitializePage() {
 async function LoadWebsites() {
     // add the main div
     
-    
+    let websiteList = [];
     for (const site of tracked) {
         let result = await chrome.storage.local.get([site]);
         console.log(result);
@@ -77,22 +75,23 @@ async function LoadWebsites() {
     })
 
     for (let i=0;i<websiteList.length;i++) {
-        LoadSingleWebsite(websiteList[i].domain);
+        LoadSingleWebsite(websiteList[i]);
     }
     
 }
 
-async function LoadSingleWebsite(site) {
-    
+async function LoadSingleWebsite(websiteObject) {
+    let site = websiteObject.domain;
     let parent = websiteTemplate.content.cloneNode(true);
     
     let websiteName = parent.querySelector('.website');
+
     websiteName.textContent=site;
     container = parent.querySelector('.novels-inside-websites');
     container.removeAttribute('id');
 	
-
-    await LoadNovels(container,site);
+    
+    await LoadNovels(container,websiteObject);
     main.append(parent);
     
    
@@ -101,25 +100,35 @@ async function LoadSingleWebsite(site) {
 }
 
 async function LoadAllNovels(parent) {
+    let novelList = [];
     for (const site of tracked) {
         const result = await chrome.storage.local.get([site]);
         let website = Website.fromJSON(result[site]);
         for (const novel of website.novels) {
-            const node = await LoadSingleNovel(novel,website);
-            main.append(node);
+            novelList.push([novel,website]);
         }
     }
+    for (const pair of novelList) {
+        const node = await LoadSingleNovel(pair[0],pair[1]);
+        main.append(node);
+    }
+    
 }
 
-async function LoadNovels(parent,site) {
+async function LoadNovels(parent,websiteObject) {
     
     // create novel divs    
 
-    const result = await chrome.storage.local.get([site]);
-    let website = Website.fromJSON(result[site]);
-
     
+    let website = Website.fromJSON(websiteObject);
+
+    let novelList = [];
     for (const novel of website.novels) {
+        novelList.push(novel);
+    }
+
+    // add some sorting functionality here
+    for (const novel of novelList) {
         const node = await LoadSingleNovel(novel,website);
         parent.append(node);
     }
@@ -305,7 +314,7 @@ async function toggleNovel() {
 }
 
 async function refreshData() {
-
+    
     main.innerHTML = "";
     let toggleValue = localStorage.getItem('novel-toggle');
     if (toggleValue===null || toggleValue==="website") {
