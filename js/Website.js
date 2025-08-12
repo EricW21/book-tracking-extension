@@ -27,10 +27,10 @@ class Website {
         
 
         
-        if (tokens.length >= this.chapterIndex + 1) {
+        if (tokens.length >= this.chapterIndex ) {
             let found = false;
             for (let i = 0; i < this.novels.length; i++) {
-                if (this.novels[i].name === tokens[this.novelIndex]) {
+                if (this.novels[i].name === tokens[this.novelIndex-1]) {
                     console.log("website sends tokens:"+ tokens);
                     this.novels[i].update(tokens,timestamp);
                     // Move the found novel to the first position for faster future access
@@ -45,7 +45,7 @@ class Website {
             if (!found) {
                 const path = tokens.slice(0,tokens.length-1);
                 console.log(path + " novel adding");
-                const newNovel = new Novel(tokens[this.novelIndex],path,tokens[tokens.length-1],timestamp);
+                const newNovel = new Novel(tokens[this.novelIndex-1],path,tokens[tokens.length-1],timestamp);
                 this.novels.unshift(newNovel);
             }
         }

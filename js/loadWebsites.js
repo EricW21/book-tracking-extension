@@ -255,10 +255,12 @@ async function handleWebsiteForm(event) {
     
     const novelText = document.getElementById("website-novel").value.trim();
     const chapterText = document.getElementById("website-chapter").value.trim();
-
+    let novelUrl;
+    let chapterUrl;
     try {
-        let novelUrl = new URL(novelText);
-        let chapterUrl = new URL(chapterText);
+        novelUrl = new URL(novelText);
+        chapterUrl = new URL(chapterText);
+        console.log(novelUrl.hostname);
     }
     catch {
         alert("Not a Valid URL");
@@ -268,7 +270,7 @@ async function handleWebsiteForm(event) {
     
     let novelSite = extractWebsite(novelText);
     let chapterSite = extractWebsite(chapterText);
-    console.log(novelUrl.hostname);
+    
     console.log(chapterUrl.hostname);
     console.log(novelSite);
     if (novelSite!=chapterSite) {
@@ -283,6 +285,8 @@ async function handleWebsiteForm(event) {
     let novelIndex = novelUrl.pathname.split("/").length;
     let chapterIndex = chapterUrl.pathname.split("/").length;
 
+    console.log(novelIndex);
+    console.log(chapterIndex);
     let addedWebsite = new Website(novelSite,novelIndex-1,chapterIndex-1);
     tracked.add(addedWebsite.domain);
     chrome.storage.local.set({ trackedWebsites: Array.from(tracked) });
