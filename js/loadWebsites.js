@@ -8,10 +8,10 @@ let novelTemplate;
 // 0 is timestamp
 
 //1 for novels is popular
-let novelFilters = {primary: 0, order : "desc"};
+let novelFilters = {primary: "recent", order : "desc"};
 
 //1 for websites is number of novels
-let websiteFilters = {primary: 0, order : "desc"};
+let websiteFilters = {primary: "recent", order : "desc"};
 
 
 InitializePage()
@@ -80,6 +80,14 @@ async function LoadWebsites() {
     
 }
 
+function novelComparator(a,b)  {
+    let sign = 1;
+    if (websiteFilters.order=='desc') {
+        sign = -1;
+    }
+    return sign*(a.recentTimestamp-b.recentTtimestamp);
+}
+
 async function LoadSingleWebsite(websiteObject) {
     let site = websiteObject.domain;
     let parent = websiteTemplate.content.cloneNode(true);
@@ -105,11 +113,14 @@ async function LoadAllNovels(parent) {
         const result = await chrome.storage.local.get([site]);
         let website = Website.fromJSON(result[site]);
         for (const novel of website.novels) {
-            novelList.push([novel,website]);
+            novelList.push(novel);
         }
     }
-    for (const pair of novelList) {
-        const node = await LoadSingleNovel(pair[0],pair[1]);
+
+    novelList.sort(novelComparator);
+    console.log(JSON.stringify(novelList, null, 2));
+    for (const novel of novelList) {
+        const node = await LoadSingleNovel(novel);
         main.append(node);
     }
     
@@ -128,8 +139,10 @@ async function LoadNovels(parent,websiteObject) {
     }
 
     // add some sorting functionality here
+
+    novelList.sort(novelComparator);
     for (const novel of novelList) {
-        const node = await LoadSingleNovel(novel,website);
+        const node = await LoadSingleNovel(novel);
         parent.append(node);
     }
     
@@ -137,7 +150,7 @@ async function LoadNovels(parent,websiteObject) {
     
 }
 
-async function LoadSingleNovel(novel,website) {
+async function LoadSingleNovel(novel) {
     
     let node = novelTemplate.content.cloneNode(true);
     
@@ -147,7 +160,7 @@ async function LoadSingleNovel(novel,website) {
 
     let link = node.querySelector('.novel-link');
     link.textContent = novel.lastChapter;
-    link.href = website.recoverPath(novel,novel.lastChapter);
+    link.href = novel.recoverPath(novel.lastChapter);
 
     let timestamp = node.querySelector('.novel-timestamp');
     const novelDate = new Date(novel.recentTimestamp); // Assuming numericDate is a timestamp
@@ -287,7 +300,7 @@ async function handleWebsiteForm(event) {
 
     console.log(novelIndex);
     console.log(chapterIndex);
-    let addedWebsite = new Website(novelSite,novelIndex-1,chapterIndex-1);
+    let addedWebsite = new Website(novelSite,novelIndex-2,chapterIndex-2);
     tracked.add(addedWebsite.domain);
     chrome.storage.local.set({ trackedWebsites: Array.from(tracked) });
     setWebsite(addedWebsite);

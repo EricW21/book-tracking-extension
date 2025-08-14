@@ -6,12 +6,14 @@ class Novel {
     
     path = []
     recentTimestamp = 0;
-    constructor(name,  path,lastChapter,timestamp) {
+    domain = "";
+    constructor(name,  path,lastChapter,timestamp,domain) {
         
         this.name = name;
         this.recentTimestamp = timestamp;
         this.lastChapter = lastChapter;
         this.path = path;
+        this.domain = domain;
         
     }
     update(tokens,timestamp) {
@@ -22,13 +24,20 @@ class Novel {
         this.path = tokens.slice(0, -1);
         this.recentTimestamp = timestamp;
     }
+
+    recoverPath(chapter) {
+        const url = "https://" + this.domain + "/" + this.path.join('/') +"/"+ chapter;
+        return url;
+    }
+
     toJSON() {
         return {
         name: this.name,
         lastChapter: this.lastChapter,
         
         path:this.path,
-        recentTimestamp: this.recentTimestamp
+        recentTimestamp: this.recentTimestamp,
+        domain: this.domain
         };
     }
 
@@ -38,7 +47,7 @@ class Novel {
 
     static fromJSON(obj) {
         
-        const novel = new Novel(obj.name,obj.path, obj.lastChapter,obj.recentTimestamp);
+        const novel = new Novel(obj.name,obj.path, obj.lastChapter,obj.recentTimestamp,obj.domain);
         
         return novel;
     }

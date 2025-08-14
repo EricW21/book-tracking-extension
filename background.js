@@ -88,8 +88,6 @@ async function SetRecentWebsite(site) {
         const result = await chrome.storage.local.get([site]);
         if (result[site]) {
             lastWebsite = Website.fromJSON(result[site]);
-        } else {
-            lastWebsite = new Website(site);
         }
     }
 }
@@ -150,7 +148,7 @@ async function addWebsite(site, novelIndex, chapterIndex) {
     if (isTrackedWebsite(site)) {
         return;
     }
-    chrome.storage.local.set({ [site]: new Website(site,novelIndex,chapterIndex).toJSON() });
+    await chrome.storage.local.set({ [site]: new Website(site,novelIndex,chapterIndex).toJSON() });
     
     trackedWebsites.add(site);
     chrome.storage.local.set({ trackedWebsites: Array.from(trackedWebsites) });

@@ -8,7 +8,7 @@ class Website {
     
     
     // gonna enforce an unchanging novelIndex and chapterIndex
-    constructor(domain="",novelIndex=1,chapterIndex=2) {
+    constructor(domain="",novelIndex,chapterIndex) {
         this.domain = domain;
         this.novelIndex = novelIndex;
         this.chapterIndex = chapterIndex;
@@ -27,10 +27,10 @@ class Website {
         
 
         
-        if (tokens.length >= this.chapterIndex ) {
+        if (tokens.length >= this.chapterIndex+1 ) {
             let found = false;
             for (let i = 0; i < this.novels.length; i++) {
-                if (this.novels[i].name === tokens[this.novelIndex-1]) {
+                if (this.novels[i].name === tokens[this.novelIndex]) {
                     console.log("website sends tokens:"+ tokens);
                     this.novels[i].update(tokens,timestamp);
                     // Move the found novel to the first position for faster future access
@@ -45,7 +45,7 @@ class Website {
             if (!found) {
                 const path = tokens.slice(0,tokens.length-1);
                 console.log(path + " novel adding");
-                const newNovel = new Novel(tokens[this.novelIndex-1],path,tokens[tokens.length-1],timestamp);
+                const newNovel = new Novel(tokens[this.novelIndex],path,tokens[tokens.length-1],timestamp,this.domain);
                 this.novels.unshift(newNovel);
             }
         }
@@ -57,19 +57,14 @@ class Website {
     toJSON() {
         return {
             domain: this.domain,
-            novel: this.novelIndex,
-            chapter: this.chapterIndex,
+            novelIndex: this.novelIndex,
+            chapterIndex: this.chapterIndex,
             novels: this.novels.map(n => n.toJSON?.() || n)
             
         };
     }
 
-    recoverPath(novel,chapter) {
-        
-        
-        const url = "https://" + this.domain + "/" + novel.path.join('/') +"/"+ chapter;
-        return url;
-    }
+    
 
     addWebsite(website) {
         // combines websites
@@ -101,8 +96,8 @@ class Website {
     
     static fromJSON(obj) {
         const website = new Website(obj.domain,obj.novelIndex,obj.chapterIndex);
-        website.novelIndex = obj.novel;
-        website.chapterIndex = obj.chapter;
+        website.novelIndex = obj.novelIndex;
+        website.chapterIndex = obj.chapterIndex;
         
         website.novels = Array.isArray(obj.novels)
             ? obj.novels.map(n => Novel.fromJSON?.(n) || n)
