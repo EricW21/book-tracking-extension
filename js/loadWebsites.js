@@ -65,9 +65,11 @@ async function LoadWebsites() {
         if (websiteFilters.order=='desc') {
             sign = -1;
         }
-        console.log("a "+ JSON.stringify(a));
+        // console.log("a "+ JSON.stringify(a));
         let first = (a["novels"].length>0) ? a["novels"].recentTimestamp : 0;
         let second = (b["novels"].length>0) ? b["novels"][0].recentTimestamp : 0;
+
+        
         if (websiteFilters.primary==0) {
             return sign* (first-second);
         }
@@ -81,11 +83,12 @@ async function LoadWebsites() {
 }
 
 function novelComparator(a,b)  {
-    let sign = 1;
+    let sign = -1;
     if (websiteFilters.order=='desc') {
-        sign = -1;
+        sign = 1;
     }
-    return sign*(a.recentTimestamp-b.recentTtimestamp);
+    
+    return sign*(b.recentTimestamp-a.recentTimestamp);
 }
 
 async function LoadSingleWebsite(websiteObject) {
