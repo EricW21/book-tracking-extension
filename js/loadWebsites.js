@@ -220,15 +220,17 @@ async function loadJsonData(jsonData) {
                 console.log(`🧠 Memory BEFORE processing "${key}":`, performance.memory.usedJSHeapSize);
             }
             console.log("key and value: ",key,JSON.stringify(value, null, 2));
-            const result = await chrome.storage.local.get([key]);
-            
-            let firstWebsite = Website.fromJSON(result[key]);
-            
-            let website  = Website.fromJSON(value);
 
+
+            let website  = Website.fromJSON(value);
+            const result = await chrome.storage.local.get([key]);
+            if (result[key]) {
+                let firstWebsite = Website.fromJSON(result[key]);
+                website.addWebsite(firstWebsite);
+            }
             
-            firstWebsite.addWebsite(website);
-            setWebsite(firstWebsite);
+            
+            setWebsite(website);
 
             
             if (!tracked.has(website.domain)) {
