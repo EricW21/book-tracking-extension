@@ -9,6 +9,10 @@ class Website {
     
     // gonna enforce an unchanging novelIndex and chapterIndex
     constructor(domain="",novelIndex,chapterIndex) {
+
+        if (novelIndex==undefined || chapterIndex==undefined) {
+            throw Error("at least one of the indexes are undefined");
+        }
         this.domain = domain;
         this.novelIndex = novelIndex;
         this.chapterIndex = chapterIndex;
@@ -95,6 +99,9 @@ class Website {
 
     
     static fromJSON(obj) {
+        if (!obj || typeof obj.novelIndex === "undefined" || typeof obj.chapterIndex === "undefined") {
+            throw new Error("Invalid Website object: missing novelIndex or chapterIndex");
+        }
         if (!obj) {
             throw new Error("Cannot create Website from undefined object");
         }
@@ -110,3 +117,5 @@ class Website {
     
 }
 
+
+module.exports = { Website };
