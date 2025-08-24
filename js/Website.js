@@ -95,9 +95,11 @@ class Website {
 
     
     static fromJSON(obj) {
+        if (!obj) {
+            throw new Error("Cannot create Website from undefined object");
+        }
         const website = new Website(obj.domain,obj.novelIndex,obj.chapterIndex);
-        website.novelIndex = obj.novelIndex;
-        website.chapterIndex = obj.chapterIndex;
+        
         
         website.novels = Array.isArray(obj.novels)
             ? obj.novels.map(n => Novel.fromJSON?.(n) || n)

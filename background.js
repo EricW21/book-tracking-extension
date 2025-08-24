@@ -9,7 +9,7 @@ initializeTrackedWebsites();
 // const keywords = ["novel", "transla", "manga"];
 const keywords = ["novel"];
 
-let lastWebsite = new Website();
+let lastWebsite= new Website("",1,2);
 
 
 
@@ -32,8 +32,8 @@ async function initializeTrackedWebsites() {
         trackedWebsites = new Set(result.trackedWebsites || []);
 
         
-        startingSites.forEach(([site, novelIndex, chapterIndex]) => {
-            addWebsite(site, novelIndex, chapterIndex);
+        startingSites.forEach(async ([site, novelIndex, chapterIndex]) => {
+            await addWebsite(site, novelIndex, chapterIndex);
         });
         
     } catch (error) {
@@ -64,7 +64,11 @@ async function getCurrentTab() {
             console.log("not a website");
             return;
         }
-        
+
+        const result = await chrome.storage.local.get(["trackedWebsites"]);
+        trackedWebsites = new Set(result.trackedWebsites || []);
+
+
         if (!isTrackedWebsite(website)) {
             console.log("not a tracked website");
 
@@ -152,7 +156,7 @@ async function addWebsite(site, novelIndex, chapterIndex) {
     
     trackedWebsites.add(site);
     chrome.storage.local.set({ trackedWebsites: Array.from(trackedWebsites) });
-    SetRecentWebsite(site);
+    await SetRecentWebsite(site);
     chrome.storage.local.get(null, function(items) {
         
         console.log(items);
