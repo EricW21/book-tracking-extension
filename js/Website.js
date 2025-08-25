@@ -95,6 +95,7 @@ class Website {
                 this.novels.push(novel);
             }
         }
+        this.novels.sort((a, b) => b.recentTimestamp - a.recentTimestamp);
     }
 
     
