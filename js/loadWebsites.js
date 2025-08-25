@@ -63,25 +63,19 @@ async function LoadWebsites() {
         
     }
 
-    websiteList.sort((a,b)=> {
-        let sign = 1;
-        if (websiteFilters.order=='desc') {
-            sign = -1;
-        }
-        // console.log("a "+ JSON.stringify(a));
-        let first = (a["novels"].length>0) ? a["novels"][0].recentTimestamp : 0;
-        let second = (b["novels"].length>0) ? b["novels"][0].recentTimestamp : 0;
-        console.log(first);
-        
-        if (websiteFilters.primary=='recent') {
-            return sign* (second-first);
-        }
-    
+    websiteList.sort((a, b) => {
+        let sign = websiteFilters.order === 'desc' ? 1 : -1;
+        let first = (a["novels"].length > 0) ? a["novels"][0].recentTimestamp : 0;
+        let second = (b["novels"].length > 0) ? b["novels"][0].recentTimestamp : 0;
 
-    })
+        console.log(a,"a","b:",b);
 
+        console.log("first: ",first," second: ",second);
+        return sign * (second - first);
+    });
+   
     for (let i=0;i<websiteList.length;i++) {
-        LoadSingleWebsite(websiteList[i]);
+        await LoadSingleWebsite(websiteList[i]);
     }
     
 }
